@@ -1,0 +1,32 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements-dev.txt
+
+      - name: Format check (Black)
+        run: black --check src/ tests/ scripts/
+
+      - name: Lint (Ruff)
+        run: ruff check src/ tests/ scripts/
+
+      - name: Unit tests
+        run: pytest tests/unit/ -v --tb=short
