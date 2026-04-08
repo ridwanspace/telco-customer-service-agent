@@ -17,6 +17,81 @@ AI-powered customer service agent for a telecommunications company, built as a t
 
 The agent answers customer questions about **billing**, **service plans**, and **troubleshooting** using a RAG (Retrieval-Augmented Generation) pipeline. When it cannot answer confidently, it escalates to a human agent.
 
+### How It Works
+
+```mermaid
+flowchart LR
+    USER["User Message"] --> EMBED["Embed Query<br/>(Gemini Embedding)"]
+    EMBED --> FAISS["FAISS<br/>Vector Search"]
+    FAISS --> |"Top-K chunks<br/>above threshold"| PROMPT["Build Prompt<br/>(System + Context<br/>+ History)"]
+    FAISS --> |"No relevant<br/>chunks found"| ESC["Escalate to<br/>Human Agent"]
+    PROMPT --> LLM["Gemini<br/>3 Flash"]
+    LLM --> DETECT{"Escalation<br/>detected?"}
+    DETECT --> |"No"| REPLY["Reply with<br/>sources"]
+    DETECT --> |"Yes"| ESC
+
+    style USER fill:#e7f5ff,stroke:#1971c2
+    style FAISS fill:#f3f0ff,stroke:#6741d9
+    style LLM fill:#d8f5a2,stroke:#2f9e44
+    style ESC fill:#ffe3e3,stroke:#c92a2a
+    style REPLY fill:#d8f5a2,stroke:#2f9e44
+```
+
+### RAG Pipeline Detail
+
+```mermaid
+flowchart TD
+    subgraph Ingestion["INGESTION (startup)"]
+        direction TB
+        KB["Knowledge Base<br/>3 markdown files"] --> PARSE["Parse bullet points<br/>+ prefix with doc title"]
+        PARSE --> CHUNKS["12 chunks<br/><i>[Billing Policy] Late payment<br/>fee of IDR 50,000...</i>"]
+        CHUNKS --> EMB_D["Embed<br/>(RETRIEVAL_DOCUMENT)"]
+        EMB_D --> INDEX["FAISS IndexFlatIP<br/>(cosine similarity)"]
+    end
+
+    subgraph Retrieval["RETRIEVAL (per query)"]
+        direction TB
+        QUERY["User query"] --> EMB_Q["Embed<br/>(RETRIEVAL_QUERY)"]
+        EMB_Q --> SEARCH["FAISS search<br/>top_k=3, threshold=0.3"]
+        SEARCH --> CONTEXT["Format context:<br/>matched chunks"]
+    end
+
+    subgraph Generation["GENERATION"]
+        direction TB
+        SYS["System prompt<br/>(role + rules)"] --> MERGE["Merge:<br/>system + context<br/>+ history + query"]
+        CONTEXT --> MERGE
+        MERGE --> GEMINI["Gemini 3 Flash<br/>(temp=0.1)"]
+        GEMINI --> RESPONSE["Response +<br/>escalation check"]
+    end
+
+    INDEX -.-> SEARCH
+
+    style Ingestion fill:#e7f5ff,stroke:#1971c2
+    style Retrieval fill:#f3f0ff,stroke:#6741d9
+    style Generation fill:#d8f5a2,stroke:#2f9e44
+```
+
+### Module Map
+
+```mermaid
+graph TD
+    MAIN["src/main.py<br/>FastAPI App + Lifespan"] --> ROUTER["src/api/router.py<br/>/chat  /health"]
+    ROUTER --> SERVICE["src/agent/service.py<br/>LLM Orchestration"]
+    SERVICE --> RETRIEVER["src/rag/retriever.py<br/>Search + Format Context"]
+    SERVICE --> PROMPTS["src/core/prompts.py<br/>System Prompt"]
+    RETRIEVER --> EMBEDDINGS["src/rag/embeddings.py<br/>Gemini Embedding API"]
+    RETRIEVER --> VECTORSTORE["src/rag/vector_store.py<br/>FAISS Index"]
+    MAIN --> INGESTION["src/rag/ingestion.py<br/>Document Chunking"]
+    INGESTION --> VECTORSTORE
+    MAIN --> CONFIG["src/core/config.py<br/>Settings (.env)"]
+    ROUTER --> SCHEMAS["src/api/schemas.py<br/>Request/Response Models"]
+
+    style MAIN fill:#d8f5a2,stroke:#2f9e44
+    style SERVICE fill:#f3f0ff,stroke:#6741d9
+    style RETRIEVER fill:#e7f5ff,stroke:#1971c2
+    style VECTORSTORE fill:#e7f5ff,stroke:#1971c2
+```
+
 ## Live Demo
 
 | Service | URL |
