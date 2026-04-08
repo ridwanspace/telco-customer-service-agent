@@ -1,5 +1,18 @@
 # MyTelco Customer Service AI Agent
 
+![Python](https://img.shields.io/badge/Python-3.11+-3776AB?logo=python&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-0.115+-009688?logo=fastapi&logoColor=white)
+![Google Gemini](https://img.shields.io/badge/Google_Gemini-3_Flash_Preview-4285F4?logo=google&logoColor=white)
+![FAISS](https://img.shields.io/badge/FAISS-Vector_Search-0467DF?logo=meta&logoColor=white)
+![Streamlit](https://img.shields.io/badge/Streamlit-Chat_UI-FF4B4B?logo=streamlit&logoColor=white)
+![Mermaid](https://img.shields.io/badge/Mermaid-Diagrams-FF3670?logo=mermaid&logoColor=white)
+![Cloud Run](https://img.shields.io/badge/Cloud_Run-Deployed-4285F4?logo=googlecloud&logoColor=white)
+![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-CI%2FCD-2088FF?logo=githubactions&logoColor=white)
+![Black](https://img.shields.io/badge/Code_Style-Black-000000?logo=python&logoColor=white)
+![Ruff](https://img.shields.io/badge/Linter-Ruff-D7FF64?logo=ruff&logoColor=black)
+![Pytest](https://img.shields.io/badge/Tests-Pytest_20_passed-0A9EDC?logo=pytest&logoColor=white)
+![Pydantic](https://img.shields.io/badge/Pydantic-V2-E92063?logo=pydantic&logoColor=white)
+
 AI-powered customer service agent for a telecommunications company, built as a technical assignment for Kata.ai.
 
 The agent answers customer questions about **billing**, **service plans**, and **troubleshooting** using a RAG (Retrieval-Augmented Generation) pipeline. When it cannot answer confidently, it escalates to a human agent.
