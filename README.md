@@ -26,6 +26,24 @@ The agent answers customer questions about **billing**, **service plans**, and *
    - **Source documents** used to generate the answer
    - **Escalation warning** when it can't answer confidently
 
+## Deliverables
+
+| # | Deliverable | Format | For | Location |
+|---|-------------|--------|-----|----------|
+| 1 | Working code | GitHub repo | Q1 | [`src/`](src/) — FastAPI app, RAG pipeline, agent service |
+| 2 | README with setup instructions | Markdown | Q1 | This file — see [Quick Start](#quick-start) and [Design Decisions](#design-decisions-q1) |
+| 3 | Architecture diagram | Mermaid (renders on GitHub) | Q2 | [`docs/SYSTEM_DESIGN.md`](docs/SYSTEM_DESIGN.md) — 10 diagrams covering architecture, flows, and failure modes |
+| 4 | Design & evaluation document | Markdown | Q2 | [`docs/SYSTEM_DESIGN.md`](docs/SYSTEM_DESIGN.md) — system design, evaluation strategy, observability, failure analysis |
+
+**Bonus deliverables:**
+
+| Deliverable | Location |
+|-------------|----------|
+| Live demo (Streamlit Chat UI) | [telco-agent-ui](https://telco-agent-ui-840606066459.asia-southeast1.run.app) |
+| Live API (FastAPI + Swagger) | [telco-agent-api](https://telco-agent-api-840606066459.asia-southeast1.run.app/docs) |
+| CI/CD pipeline (GitHub Actions) | [`.github/workflows/`](.github/workflows/) |
+| Unit tests (20 tests) | [`tests/`](tests/) |
+
 ## Tech Stack
 
 | Component | Technology |
