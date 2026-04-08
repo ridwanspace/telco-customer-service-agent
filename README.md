@@ -155,8 +155,7 @@ Health check endpoint.
 ├── streamlit_app/            # Chat UI frontend
 ├── tests/                    # Unit tests (20 tests)
 ├── docs/
-│   ├── SYSTEM_DESIGN.md     # Q2: Architecture & evaluation document
-│   └── architecture.excalidraw  # Q2: Architecture diagram
+│   └── SYSTEM_DESIGN.md     # Q2: Architecture & evaluation document (with Mermaid diagrams)
 ├── plan/                     # Development plan documents
 └── .github/workflows/        # CI/CD pipelines
 ```
@@ -213,9 +212,7 @@ Each bullet point from the knowledge base becomes a single chunk, prefixed with 
 
 ## Q2: System Design & Evaluation
 
-See [`docs/SYSTEM_DESIGN.md`](docs/SYSTEM_DESIGN.md) for the full production architecture design, evaluation strategy, observability plan, and failure mode analysis.
-
-The architecture diagram is available as an [Excalidraw file](docs/architecture.excalidraw) — open it at [excalidraw.com](https://excalidraw.com) to view and edit.
+See [`docs/SYSTEM_DESIGN.md`](docs/SYSTEM_DESIGN.md) for the full production architecture design, evaluation strategy, observability plan, and failure mode analysis. All diagrams are rendered as Mermaid and display natively on GitHub.
 
 ## Development
 

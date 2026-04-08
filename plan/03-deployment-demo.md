@@ -170,5 +170,10 @@ CMD ["streamlit", "run", "app.py", "--server.port=8501", "--server.address=0.0.0
 - [x] GitHub Actions CD workflow (deploy.yml)
 - [x] Backend Dockerfile (multi-stage, non-root)
 - [x] Streamlit Dockerfile
-- [ ] Cloud Run services deployed (pending: GCP SA key + Artifact Registry setup)
-- [ ] Demo URL accessible to reviewers (pending deployment)
+- [x] Cloud Run services deployed
+  - Backend: https://telco-agent-api-840606066459.asia-southeast1.run.app
+  - Frontend: https://telco-agent-ui-840606066459.asia-southeast1.run.app
+- [x] Demo URL accessible to reviewers
+- [x] GCP Service Account created with IAM roles (Cloud Run Admin, Artifact Registry Writer, SA User)
+- [x] GitHub Secrets set (GCP_SA_KEY, GEMINI_API_KEY)
+- [x] GitHub repo: https://github.com/ridwanspace/telco-customer-service-agent
