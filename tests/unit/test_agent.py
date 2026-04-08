@@ -17,7 +17,7 @@ class TestDetectEscalation:
 
     def test_escalate_prefix_case_insensitive(self) -> None:
         reply = "escalate: Let me connect you."
-        cleaned, escalate = _detect_escalation(reply)
+        _, escalate = _detect_escalation(reply)
 
         assert escalate is True
 
