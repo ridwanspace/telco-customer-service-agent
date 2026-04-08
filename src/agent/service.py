@@ -7,7 +7,13 @@ from google.genai.types import Content, GenerateContentConfig, Part
 
 from src.api.schemas import ChatResponse, Message
 from src.core.config import settings
-from src.core.prompts import ESCALATE_PREFIX, NO_CONTEXT_RESPONSE, SYSTEM_PROMPT
+from src.core.prompts import (
+    ESCALATE_PREFIX,
+    NO_CONTEXT_RESPONSE,
+    SECURITY_REFUSAL_RESPONSE,
+    SYSTEM_PROMPT,
+)
+from src.core.security import validate_input
 from src.rag.retriever import (
     RetrievalResult,
     format_context,
@@ -80,17 +86,28 @@ def chat(
     vector_store: VectorStore,
 ) -> ChatResponse:
     """Process a user message through the RAG pipeline and return a response."""
-    # Step 1: Retrieve relevant chunks
-    retrieval_results: list[RetrievalResult] = retrieve(user_message, vector_store)
+    # Step 1: Validate and sanitize input
+    sanitized_message, is_injection = validate_input(user_message)
+
+    if is_injection:
+        logger.warning("Prompt injection attempt blocked: %s", user_message[:100])
+        return ChatResponse(
+            reply=SECURITY_REFUSAL_RESPONSE,
+            escalate=False,
+            sources=[],
+        )
+
+    # Step 2: Retrieve relevant chunks
+    retrieval_results: list[RetrievalResult] = retrieve(sanitized_message, vector_store)
     sources = get_source_documents(retrieval_results)
 
     logger.info(
         "Retrieved %d chunks for query: %s",
         len(retrieval_results),
-        user_message[:50],
+        sanitized_message[:50],
     )
 
-    # Step 2: If no relevant chunks, escalate immediately
+    # Step 3: If no relevant chunks, escalate immediately
     if not retrieval_results:
         logger.info("No relevant chunks found — escalating")
         return ChatResponse(
@@ -99,14 +116,14 @@ def chat(
             sources=[],
         )
 
-    # Step 3: Build prompt with context
+    # Step 4: Build prompt with context
     context = format_context(retrieval_results)
     system_prompt = SYSTEM_PROMPT.format(context=context)
 
-    # Step 4: Build conversation contents
-    contents = _build_contents(user_message, conversation_history)
+    # Step 5: Build conversation contents (use sanitized message)
+    contents = _build_contents(sanitized_message, conversation_history)
 
-    # Step 5: Call Gemini
+    # Step 6: Call Gemini
     client = _get_client()
     response = client.models.generate_content(
         model=settings.gemini_model,
@@ -120,7 +137,7 @@ def chat(
 
     reply_text = response.text or NO_CONTEXT_RESPONSE
 
-    # Step 6: Detect escalation in response
+    # Step 7: Detect escalation in response
     reply_text, escalate = _detect_escalation(reply_text)
 
     logger.info("Response escalate=%s, sources=%s", escalate, sources)
