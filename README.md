@@ -102,6 +102,12 @@ graph TD
 
 > Deployed on Google Cloud Run (`asia-southeast1` / Jakarta) via GitHub Actions. Services scale to zero when idle — first request may take a few seconds for cold start.
 
+<p align="center">
+  <img src="docs/images/chat-ui.png" alt="Streamlit Chat UI" width="80%"/>
+  <br/>
+  <em>Streamlit Chat UI — asking about service plans with source attribution</em>
+</p>
+
 ### Try It Out
 
 1. Open the **[Chat UI](https://telco-agent-ui-840606066459.asia-southeast1.run.app)**
@@ -201,6 +207,12 @@ pytest tests/unit/ -v
 ```
 
 ## API Reference
+
+<p align="center">
+  <img src="docs/images/be-api-redoc.png" alt="FastAPI ReDoc" width="80%"/>
+  <br/>
+  <em>FastAPI auto-generated API documentation (ReDoc) — endpoints and schemas</em>
+</p>
 
 ### `POST /chat`
 
